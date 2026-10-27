@@ -416,7 +416,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ------------------------------------------
-    // D. REFRESH SCROLLTRIGGER AFTER INITIAL LOAD
+    // D. NUMBERS ANIMATED COUNTERS
+    // ------------------------------------------
+    const numbersSection = document.querySelector('[data-framer-name="Numbers"]');
+    if (numbersSection) {
+      ScrollTrigger.create({
+        trigger: numbersSection,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          const stats = [
+            { label: 'Websites launched', target: 12, decimals: 0 },
+            { label: 'Users reached', target: 1.2, decimals: 1 },
+            { label: 'Client satisfaction rate', target: 66, decimals: 0 },
+            { label: 'Years of expertise', target: 6, decimals: 0 }
+          ];
+
+          stats.forEach(stat => {
+            const labels = Array.from(numbersSection.querySelectorAll('*')).filter(el => 
+              el.children.length === 0 && el.innerText && el.innerText.trim() === stat.label
+            );
+            labels.forEach(label => {
+              const itemRoot = label.closest('.framer-11g5wz4')?.parentElement || label.parentElement?.parentElement?.parentElement?.parentElement;
+              if (itemRoot) {
+                const numSpans = Array.from(itemRoot.querySelectorAll('span')).filter(s => /^\d+(\.\d+)?$/.test(s.innerText.trim()));
+                numSpans.forEach(span => {
+                  const obj = { val: 0 };
+                  gsap.to(obj, {
+                    val: stat.target,
+                    duration: 1.8,
+                    ease: 'power2.out',
+                    onUpdate: () => {
+                      span.innerText = stat.decimals === 1 ? obj.val.toFixed(1) : Math.round(obj.val).toString();
+                    }
+                  });
+                });
+              }
+            });
+          });
+        }
+      });
+    }
+
+    // ------------------------------------------
+    // E. REFRESH SCROLLTRIGGER AFTER INITIAL LOAD
     // ------------------------------------------
     setTimeout(() => {
       ScrollTrigger.refresh();
