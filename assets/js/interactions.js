@@ -1,0 +1,314 @@
+/**
+ * Lyniq Studio - Native Interactions & Behavior Engine
+ * Standalone, lightweight, and performant vanilla JS.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ==========================================
+  // 0. LENIS SMOOTH SCROLLING ENGINE
+  // ==========================================
+  if (typeof Lenis !== 'undefined') {
+    try {
+      const lenis = new Lenis({
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 0.95,
+        touchMultiplier: 1.5,
+      });
+
+      window.lenisInstance = lenis;
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+      console.log('Lenis smooth scrolling initialized successfully.');
+    } catch (e) {
+      console.warn('Lenis initialization failed:', e);
+    }
+  }
+
+  // ==========================================
+  // 1. SERVICES INTERACTIVE TABS
+  // ==========================================
+  const servicesData = [
+    {
+      title: 'Branding',
+      description: 'We create impactful brand identities that differentiate your business and connect with your audience.',
+      image: './assets/images/T5XSyGg3skqWFq4gynSvi2wGqHU.jpg'
+    },
+    {
+      title: 'Development',
+      description: 'From front-end interactions to back-end functionality, we deliver robust solutions that grow with your business.',
+      image: './assets/images/SVNjJOBLJO0tL5qGNY8CExU1fA.jpg'
+    },
+    {
+      title: 'Websites',
+      description: 'We build custom websites that go beyond aesthetics, balancing design and functionality to captivate your audience and drive engagement.',
+      image: './assets/images/F5zSpVx8lP6Sy03URQXBu2RRUbg.jpg'
+    },
+    {
+      title: 'Design support',
+      description: 'We’re here to help with everything from small updates to full-scale redesigns, tailored to your evolving needs.',
+      image: './assets/images/AlJTmhoexT1QmxuwZ7OiLjeKtUM.jpg'
+    }
+  ];
+
+  const serviceContainers = document.querySelectorAll('.servicesListRoot');
+  serviceContainers.forEach(container => {
+    const rows = container.querySelectorAll('.servicesListRow');
+    const detailInner = container.querySelector('.servicesListDetailInner');
+    const detailSwap = container.querySelector('.servicesListDetailSwap');
+    const detailImg = container.querySelector('.servicesListDetailImage');
+    const detailTitle = container.querySelector('.servicesListDetailTitle');
+    const detailDesc = container.querySelector('.servicesListDetailDescription');
+
+    rows.forEach((row, index) => {
+      row.addEventListener('click', (e) => {
+        e.preventDefault();
+        const data = servicesData[index];
+        if (!data) return;
+
+        // Update active class
+        rows.forEach(r => {
+          r.classList.remove('isActive');
+          r.setAttribute('aria-pressed', 'false');
+          r.removeAttribute('aria-current');
+        });
+        row.classList.add('isActive');
+        row.setAttribute('aria-pressed', 'true');
+        row.setAttribute('aria-current', 'true');
+
+        // Animate offset
+        if (detailInner) {
+          detailInner.style.setProperty('--detail-offset', String(index * 50));
+        }
+
+        // Animate swap with fade
+        if (detailSwap) {
+          detailSwap.style.opacity = '0';
+          detailSwap.style.transform = 'translateY(10px)';
+          setTimeout(() => {
+            if (detailImg) detailImg.src = data.image;
+            if (detailTitle) detailTitle.textContent = data.title;
+            if (detailDesc) detailDesc.textContent = data.description;
+            detailSwap.style.opacity = '1';
+            detailSwap.style.transform = 'translateY(0)';
+          }, 150);
+        }
+      });
+    });
+  });
+
+  // ==========================================
+  // 2. PRICING MONTHLY / ANNUAL TOGGLE
+  // ==========================================
+  const pricingSection = document.querySelector('[data-framer-name="Pricing"]');
+  if (pricingSection) {
+    const togglePeriods = pricingSection.querySelectorAll('[data-framer-name="Period"]');
+    let isAnnual = false;
+
+    const prices = {
+      monthly: {
+        basic: '$999',
+        pro: '$2,999',
+        max: '$4,999'
+      },
+      annual: {
+        basic: '$699',
+        pro: '$2,099',
+        max: '$3,499'
+      }
+    };
+
+    const updatePricingDisplay = () => {
+      const mode = isAnnual ? 'annual' : 'monthly';
+      
+      // Update toggle indicator
+      pricingSection.querySelectorAll('[data-framer-name="Left"]').forEach(sw => {
+        const ellipse = sw.querySelector('[data-framer-name="Ellipse"]');
+        if (isAnnual) {
+          sw.style.justifyContent = 'flex-end';
+          if (ellipse) ellipse.style.transform = 'translateX(24px)';
+        } else {
+          sw.style.justifyContent = 'flex-start';
+          if (ellipse) ellipse.style.transform = 'translateX(0px)';
+        }
+      });
+
+      // Update text opacities on toggle labels
+      pricingSection.querySelectorAll('[data-framer-name="Monthly"]').forEach(el => {
+        el.style.opacity = isAnnual ? '0.5' : '1';
+      });
+      pricingSection.querySelectorAll('[data-framer-name="Annual"]').forEach(el => {
+        el.style.opacity = isAnnual ? '1' : '0.5';
+      });
+
+      // Update card prices
+      const cardTexts = pricingSection.querySelectorAll('p.framer-text');
+      cardTexts.forEach(p => {
+        const text = p.textContent.trim();
+        if (text === '$999' || text === '$699') {
+          p.textContent = prices[mode].basic;
+        } else if (text === '$2,999' || text === '$2,099') {
+          p.textContent = prices[mode].pro;
+        } else if (text === '$4,999' || text === '$3,499') {
+          p.textContent = prices[mode].max;
+        }
+      });
+    };
+
+    togglePeriods.forEach(period => {
+      period.style.cursor = 'pointer';
+      period.addEventListener('click', () => {
+        isAnnual = !isAnnual;
+        updatePricingDisplay();
+      });
+    });
+  }
+
+  // ==========================================
+  // 3. FAQ ACCORDION (Expand / Collapse)
+  // ==========================================
+  const faqSection = document.querySelector('[data-framer-name="FAQ"]');
+  if (faqSection) {
+    const questions = faqSection.querySelectorAll('[data-framer-name="Question"]');
+    
+    questions.forEach((q, idx) => {
+      const answer = q.parentElement.querySelector('[data-framer-name="answer"]');
+      if (!answer) return;
+
+      // Add wrapper styles for clean animation
+      answer.classList.add('faq-answer-wrap');
+      
+      // First item can be open, remaining closed initially
+      if (idx === 0) {
+        answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
+        answer.style.opacity = '1';
+        answer.style.marginTop = '16px';
+        q.setAttribute('data-faq-open', 'true');
+      } else {
+        answer.style.maxHeight = '0px';
+        answer.style.opacity = '0';
+        answer.style.marginTop = '0px';
+        q.setAttribute('data-faq-open', 'false');
+      }
+
+      q.addEventListener('click', () => {
+        const isOpen = q.getAttribute('data-faq-open') === 'true';
+        
+        // Close siblings
+        questions.forEach(otherQ => {
+          if (otherQ !== q) {
+            otherQ.setAttribute('data-faq-open', 'false');
+            const otherA = otherQ.parentElement.querySelector('[data-framer-name="answer"]');
+            if (otherA) {
+              otherA.style.maxHeight = '0px';
+              otherA.style.opacity = '0';
+              otherA.style.marginTop = '0px';
+            }
+          }
+        });
+
+        // Toggle current
+        if (isOpen) {
+          q.setAttribute('data-faq-open', 'false');
+          answer.style.maxHeight = '0px';
+          answer.style.opacity = '0';
+          answer.style.marginTop = '0px';
+        } else {
+          q.setAttribute('data-faq-open', 'true');
+          answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
+          answer.style.opacity = '1';
+          answer.style.marginTop = '16px';
+        }
+      });
+    });
+  }
+
+  // ==========================================
+  // 4. HEADER / BURGER MENU
+  // ==========================================
+  const menuButtons = document.querySelectorAll('[data-framer-name="Header / Burger menu"], [data-framer-name="MENU"]');
+  menuButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const header = btn.closest('header');
+      if (!header) return;
+
+      const isDesktopClosed = header.classList.contains('framer-v-m5ha19');
+      const isPhoneClosed = header.classList.contains('framer-v-19vil5u');
+
+      if (isDesktopClosed) {
+        header.classList.remove('framer-v-m5ha19');
+        header.style.height = 'auto';
+      } else if (header.classList.contains('framer-185cz0f') && !isPhoneClosed) {
+        header.classList.add('framer-v-m5ha19');
+        header.style.height = '50px';
+      }
+
+      if (isPhoneClosed) {
+        header.classList.remove('framer-v-19vil5u');
+        header.classList.add('framer-v-7tbwy4');
+        header.style.height = 'auto';
+      } else if (header.classList.contains('framer-v-7tbwy4')) {
+        header.classList.remove('framer-v-7tbwy4');
+        header.classList.add('framer-v-19vil5u');
+        header.style.height = '70px';
+      }
+    });
+  });
+
+  // ==========================================
+  // 5. CONTACT & NEWSLETTER FORMS
+  // ==========================================
+  const forms = document.querySelectorAll('form[data-framer-form]');
+  forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]') || form.querySelector('input[type="submit"]');
+      const origText = submitBtn ? submitBtn.innerText : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Sending...';
+      }
+
+      setTimeout(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Sent Successfully!';
+        }
+        alert('Thank you! Your inquiry has been sent to Lyniq Studio. We will contact you within 24 hours.');
+        form.reset();
+        setTimeout(() => {
+          if (submitBtn) submitBtn.innerText = origText || 'Submit';
+        }, 3000);
+      }, 600);
+    });
+  });
+
+  // ==========================================
+  // 6. SMOOTH SCROLL FOR HASH LINKS
+  // ==========================================
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href').slice(1);
+      if (!targetId) return;
+      const targetEl = document.getElementById(targetId) || document.querySelector(`[data-framer-name="${targetId}"]`);
+      if (targetEl) {
+        e.preventDefault();
+        if (window.lenisInstance) {
+          window.lenisInstance.scrollTo(targetEl, { offset: -60, duration: 1.2 });
+        } else {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+});
