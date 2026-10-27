@@ -91,7 +91,7 @@ function processHtml(html, destRelPath) {
   /* Lyniq Native Interactions & Visual Fixes */
   #__framer-badge-container { display: none !important; }
   .framer-143iyx0-container { display: none !important; }
-  a[href*="templifica.com"], .framer-joiwk4-container { display: none !important; }
+  a[href*="templifica"], .framer-PdQjD, #template-overlay { display: none !important; }
 
   /* Lenis smooth scroll styles */
   html.lenis, html.lenis body {
