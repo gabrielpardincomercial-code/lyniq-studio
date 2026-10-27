@@ -2,6 +2,10 @@
 RewriteEngine On
 
 # Force HTTPS & WWW normalization if needed (Hostinger handles SSL automatically)
+# Project duplicate slugs rewrite
+RewriteRule ^projects/stoyo-branding-copy/?$ /projects/stoyo-branding.html [R=301,L]
+RewriteRule ^projects/radiant-skincare-branding-copy/?$ /projects/radiant-skincare-branding.html [R=301,L]
+
 # Clean URLs: map /about to /about.html, etc.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

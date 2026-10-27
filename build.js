@@ -141,11 +141,21 @@ function processHtml(html, destRelPath) {
   .servicesListDetailSwap {
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
+
+  /* Project card image hover zoom */
+  .framer-lux5qc img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  .framer-lux5qc:hover img {
+    transform: scale(1.045) !important;
+  }
 </style>
 `;
 
   const customJs = `
 <script src="${assetPrefix}js/lenis.min.js"></script>
+<script src="${assetPrefix}js/gsap.min.js"></script>
+<script src="${assetPrefix}js/ScrollTrigger.min.js"></script>
 <script src="${assetPrefix}js/interactions.js"></script>
 `;
 

@@ -6,30 +6,40 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================
-  // 0. LENIS SMOOTH SCROLLING ENGINE
+  // 0. LENIS + GSAP SCROLLTRIGGER ENGINE
   // ==========================================
+  let lenis = null;
   if (typeof Lenis !== 'undefined') {
     try {
-      const lenis = new Lenis({
-        duration: 1.1,
+      lenis = new Lenis({
+        duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 0.95,
+        wheelMultiplier: 1.0,
         touchMultiplier: 1.5,
       });
 
       window.lenisInstance = lenis;
 
-      function raf(time) {
-        lenis.raf(time);
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+          lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
         requestAnimationFrame(raf);
       }
-      requestAnimationFrame(raf);
-      console.log('Lenis smooth scrolling initialized successfully.');
+      console.log('Lenis & GSAP ScrollTrigger synchronized successfully.');
     } catch (e) {
-      console.warn('Lenis initialization failed:', e);
+      console.warn('Lenis/GSAP initialization failed:', e);
     }
   }
 
@@ -310,5 +320,108 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // ==========================================
+  // 7. GSAP CINEMATIC SCROLL EFFECTS
+  // ==========================================
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    // ------------------------------------------
+    // A. HERO ZOOM-OUT & PARALLAX
+    // ------------------------------------------
+    const heroBg = document.querySelector('[data-framer-name="Hero"] [data-framer-name="BG"], [data-framer-name="BG"]');
+    if (heroBg) {
+      gsap.fromTo(heroBg,
+        { scale: 1.15, y: 0 },
+        {
+          scale: 1.0,
+          y: 70,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroBg.closest('section') || heroBg,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.5,
+          }
+        }
+      );
+    }
+
+    const heroSection = document.querySelector('[data-framer-name="Hero"]');
+    if (heroSection) {
+      const heroText = heroSection.querySelectorAll('h1, [data-framer-name="Lyniq"], [data-framer-name="©19-24"]');
+      heroText.forEach(el => {
+        gsap.to(el, {
+          y: -50,
+          opacity: 0.7,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroSection,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.5,
+          }
+        });
+      });
+    }
+
+    // ------------------------------------------
+    // B. SECTION REVEALS (FADE-UP & STAGGER)
+    // ------------------------------------------
+    const revealTargets = document.querySelectorAll(
+      'section:not([data-framer-name="Hero"]) [data-framer-name="Heading"], ' +
+      'section:not([data-framer-name="Hero"]) [data-framer-name="Title"], ' +
+      'section:not([data-framer-name="Hero"]) [data-framer-name="Top"], ' +
+      'section:not([data-framer-name="Hero"]) [data-framer-name="Category"], ' +
+      '[data-framer-name="Numbers"], ' +
+      '[data-framer-name="Quote"], ' +
+      '[data-framer-name="Pricing"] [data-framer-name="Container"], ' +
+      '.servicesListRoot, ' +
+      '[data-framer-name="FAQ"] [data-framer-name="Container"]'
+    );
+
+    revealTargets.forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0.05, y: 35 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.85,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+            once: true
+          }
+        }
+      );
+    });
+
+    // ------------------------------------------
+    // C. PROJECT CARDS STAGGERED PARALLAX
+    // ------------------------------------------
+    const projectCards = document.querySelectorAll('.framer-lux5qc, [data-framer-name*="Project"]');
+    projectCards.forEach((card, i) => {
+      const speed = (i % 2 === 0) ? -35 : -70;
+      gsap.to(card, {
+        y: speed,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: card,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 0.8,
+        }
+      });
+    });
+
+    // ------------------------------------------
+    // D. REFRESH SCROLLTRIGGER AFTER INITIAL LOAD
+    // ------------------------------------------
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+      console.log('ScrollTrigger refreshed & active.');
+    }, 400);
+  }
 
 });
