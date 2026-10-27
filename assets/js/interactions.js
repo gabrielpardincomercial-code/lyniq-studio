@@ -426,10 +426,10 @@ document.addEventListener('DOMContentLoaded', () => {
         once: true,
         onEnter: () => {
           const stats = [
-            { label: 'Websites launched', target: 12, decimals: 0 },
-            { label: 'Users reached', target: 1.2, decimals: 1 },
-            { label: 'Client satisfaction rate', target: 66, decimals: 0 },
-            { label: 'Years of expertise', target: 6, decimals: 0 }
+            { label: 'Websites launched', target: 17, decimals: 0 },
+            { label: 'Users reached', target: 1.5, decimals: 1 },
+            { label: 'Client satisfaction rate', target: 98, decimals: 0 },
+            { label: 'Years of expertise', target: 10, decimals: 0 }
           ];
 
           stats.forEach(stat => {

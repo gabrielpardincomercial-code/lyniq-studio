@@ -368,6 +368,33 @@
   .framer-bv12sz-container { display: none !important; }
   a[href*="templifica"], .framer-PdQjD, #template-overlay { display: none !important; }
 
+  /* Sticky Curtain / Card Overlap Effect */
+  section[data-framer-name="Hero"] {
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 1 !important;
+  }
+  section[data-framer-name="Numbers"] {
+    position: relative !important;
+    z-index: 2 !important;
+    background-color: #fff !important;
+    box-shadow: 0 -20px 40px rgba(0,0,0,0.08);
+  }
+  section[data-framer-name="Description"],
+  section[data-framer-name="Benefits"],
+  section[data-framer-name="Work"],
+  section[data-framer-name="Services"],
+  section[data-framer-name="Quote"],
+  section[data-framer-name="Team"],
+  section[data-framer-name="Pricing"],
+  section[data-framer-name="Process"],
+  section[data-framer-name="Testimonials"],
+  section[data-framer-name="FAQ"],
+  section[data-framer-name="Blog"] {
+    position: relative !important;
+    z-index: 3 !important;
+  }
+
   /* Lenis smooth scroll styles */
   html.lenis, html.lenis body {
     height: auto;
