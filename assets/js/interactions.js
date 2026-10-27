@@ -369,9 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------
     const revealTargets = document.querySelectorAll(
       'section:not([data-framer-name="Hero"]) [data-framer-name="Heading"], ' +
-      'section:not([data-framer-name="Hero"]) [data-framer-name="Title"], ' +
       'section:not([data-framer-name="Hero"]) [data-framer-name="Top"], ' +
-      'section:not([data-framer-name="Hero"]) [data-framer-name="Category"], ' +
       '[data-framer-name="Numbers"], ' +
       '[data-framer-name="Quote"], ' +
       '[data-framer-name="Pricing"] [data-framer-name="Container"], ' +
@@ -381,15 +379,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealTargets.forEach(el => {
       gsap.fromTo(el,
-        { opacity: 0.05, y: 35 },
+        { opacity: 0.1, y: 30 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.85,
+          duration: 0.8,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 88%',
+            start: 'top 90%',
             toggleActions: 'play none none none',
             once: true
           }
@@ -398,11 +396,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ------------------------------------------
-    // C. PROJECT CARDS STAGGERED PARALLAX
+    // C. DESCRIPTION ZOOM SCRUB ("From ordinary to extraordinary")
+    // ------------------------------------------
+    const descSvg = document.querySelector('[data-framer-name="Description"] svg');
+    if (descSvg) {
+      gsap.fromTo(descSvg,
+        { scale: 1.12 },
+        {
+          scale: 1.0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: descSvg.closest('section'),
+            start: 'top 85%',
+            end: 'center center',
+            scrub: true
+          }
+        }
+      );
+    }
+
+    // ------------------------------------------
+    // D. BENEFITS CARDS STAGGERED ENTRANCE
+    // ------------------------------------------
+    const benefitCards = document.querySelectorAll('[data-framer-name="Benefits"] [data-framer-name="Grid"] > div, [data-framer-name="Benefits"] [data-framer-name="Content"]');
+    if (benefitCards.length) {
+      gsap.fromTo(benefitCards,
+        { opacity: 0.2, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '[data-framer-name="Benefits"]',
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+            once: true
+          }
+        }
+      );
+    }
+
+    // ------------------------------------------
+    // E. PROJECT CARDS STAGGERED 2-COLUMN PARALLAX
     // ------------------------------------------
     const projectCards = document.querySelectorAll('.framer-lux5qc, [data-framer-name*="Project"]');
     projectCards.forEach((card, i) => {
-      const speed = (i % 2 === 0) ? -35 : -70;
+      const speed = (i % 2 === 0) ? -40 : -90;
       gsap.to(card, {
         y: speed,
         ease: 'none',
