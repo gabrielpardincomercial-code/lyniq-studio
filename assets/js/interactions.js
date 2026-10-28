@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
           submitBtn.disabled = false;
           submitBtn.innerText = 'Sent Successfully!';
         }
-        alert('Thank you! Your inquiry has been sent to Lyniq Studio. We will contact you within 24 hours.');
+        alert('Thank you! Your inquiry has been received by Main Street. Our executive team in Culver City will contact you within 24 hours.');
         form.reset();
         setTimeout(() => {
           if (submitBtn) submitBtn.innerText = origText || 'Submit';
@@ -387,8 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealTargets = document.querySelectorAll(
       'section:not([data-framer-name="Hero"]) [data-framer-name="Heading"], ' +
       'section:not([data-framer-name="Hero"]) [data-framer-name="Top"], ' +
-      '[data-framer-name="Numbers"], ' +
-      '[data-framer-name="Quote"], ' +
       '[data-framer-name="Pricing"] [data-framer-name="Container"], ' +
       '.servicesListRoot, ' +
       '[data-framer-name="FAQ"] [data-framer-name="Container"]'
@@ -396,15 +394,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealTargets.forEach(el => {
       gsap.fromTo(el,
-        { opacity: 0.1, y: 30 },
+        { opacity: 0.85, y: 20 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.6,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 90%',
+            start: 'top 92%',
             toggleActions: 'play none none none',
             once: true
           }
@@ -438,16 +436,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const benefitCards = document.querySelectorAll('[data-framer-name="Benefits"] [data-framer-name="Grid"] > div, [data-framer-name="Benefits"] [data-framer-name="Content"]');
     if (benefitCards.length) {
       gsap.fromTo(benefitCards,
-        { opacity: 0.2, y: 30 },
+        { opacity: 0.9, y: 15 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.15,
+          duration: 0.6,
+          stagger: 0.1,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: '[data-framer-name="Benefits"]',
-            start: 'top 80%',
+            start: 'top 85%',
             toggleActions: 'play none none none',
             once: true
           }
@@ -478,41 +476,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------
     const numbersSection = document.querySelector('[data-framer-name="Numbers"]');
     if (numbersSection) {
-      ScrollTrigger.create({
-        trigger: numbersSection,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => {
-          const stats = [
-            { labels: ['Retention Increase', 'Websites launched', 'Retention'], target: 45, decimals: 0 },
-            { labels: ['Consumers Engaged', 'Users reached', 'Consumers'], target: 2.5, decimals: 1 },
-            { labels: ['Client Retention Rate', 'Client satisfaction rate', 'Satisfaction'], target: 98, decimals: 0 },
-            { labels: ['Expansion Markets', 'Years of expertise', 'Markets'], target: 12, decimals: 0 }
-          ];
+      const stats = [
+        { labels: ['Retention Increase', 'Websites launched', 'Retention'], target: 45, decimals: 0 },
+        { labels: ['Consumers Engaged', 'Users reached', 'Consumers'], target: 2.5, decimals: 1 },
+        { labels: ['Client Retention Rate', 'Client satisfaction rate', 'Satisfaction'], target: 98, decimals: 0 },
+        { labels: ['Expansion Markets', 'Years of expertise', 'Markets'], target: 12, decimals: 0 }
+      ];
 
-          stats.forEach(stat => {
-            const labels = Array.from(numbersSection.querySelectorAll('*')).filter(el => 
-              el.children.length === 0 && el.innerText && stat.labels.some(l => el.innerText.trim().includes(l))
-            );
-            labels.forEach(label => {
-              const itemRoot = label.closest('.framer-11g5wz4')?.parentElement || label.parentElement?.parentElement?.parentElement?.parentElement;
-              if (itemRoot) {
-                const numSpans = Array.from(itemRoot.querySelectorAll('span')).filter(s => /^\d+(\.\d+)?$/.test(s.innerText.trim()));
-                numSpans.forEach(span => {
-                  const obj = { val: 0 };
-                  gsap.to(obj, {
-                    val: stat.target,
-                    duration: 1.8,
-                    ease: 'power2.out',
-                    onUpdate: () => {
-                      span.innerText = stat.decimals === 1 ? obj.val.toFixed(1) : Math.round(obj.val).toString();
-                    }
-                  });
-                });
-              }
+      // Set initial numbers immediately so they never display 0
+      stats.forEach(stat => {
+        const labels = Array.from(numbersSection.querySelectorAll('*')).filter(el => 
+          el.children.length === 0 && el.innerText && stat.labels.some(l => el.innerText.trim().includes(l))
+        );
+        labels.forEach(label => {
+          const itemRoot = label.closest('.framer-11g5wz4')?.parentElement || label.parentElement?.parentElement?.parentElement?.parentElement;
+          if (itemRoot) {
+            const numSpans = Array.from(itemRoot.querySelectorAll('span')).filter(s => /^\d+(\.\d+)?$/.test(s.innerText.trim()));
+            numSpans.forEach(span => {
+              span.innerText = stat.decimals === 1 ? stat.target.toFixed(1) : Math.round(stat.target).toString();
             });
-          });
-        }
+          }
+        });
       });
     }
 

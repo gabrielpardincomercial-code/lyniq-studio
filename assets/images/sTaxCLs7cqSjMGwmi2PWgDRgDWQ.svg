@@ -1,1 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="73" height="49" fill="none"><path fill="#878787" d="M46.868 24c0 12.426-10.074 22.5-22.5 22.5S1.868 36.426 1.868 24 11.94 1.5 24.368 1.5c12.426 0 22.5 10.074 22.5 22.5"/><path fill="#878787" d="M71.132 24c0 12.426-9.975 22.5-22.28 22.5-12.304 0-22.278-10.074-22.278-22.5S36.547 1.5 48.852 1.5s22.28 10.074 22.28 22.5"/><path fill="#636363" d="M36.67 42.842C42.81 38.824 46.868 31.886 46.868 24S42.811 9.176 36.67 5.159A22.54 22.54 0 0 0 26.573 24 22.54 22.54 0 0 0 36.67 42.842"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" fill="none">
+      <path d="M16 10L28 38H4L16 10Z" stroke="#D4AF37" stroke-width="2.5" fill="#0c0c0c"/>
+      <text x="38" y="29" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="15" letter-spacing="0.14em" fill="#0c0c0c">APEX TELECOM</text>
+    </svg>
