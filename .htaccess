@@ -1,34 +1,70 @@
-# Lyniq Studio - Hostinger Configuration (.htaccess)
+# Main Street - Hostinger configuration (.htaccess)
+DirectoryIndex index.html
+Options -Indexes
 RewriteEngine On
 
-# Force HTTPS & WWW normalization if needed (Hostinger handles SSL automatically)
-# Project duplicate slugs rewrite
-RewriteRule ^projects/stoyo-branding-copy/?$ /projects/stoyo-branding.html [R=301,L]
-RewriteRule ^projects/radiant-skincare-branding-copy/?$ /projects/radiant-skincare-branding.html [R=301,L]
+# ---- HTTPS ----
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-# Clean URLs: map /about to /about.html, etc.
+# ---- Never expose dev / repo files ----
+RedirectMatch 404 /\.git
+<FilesMatch "^(server\.js|package(-lock)?\.json|README\.md|\.gitignore)$">
+  Require all denied
+</FilesMatch>
+
+# ---- Old template URLs -> new pages (301) ----
+RewriteRule ^projects/(radiant-skincare-branding|radiant-skincare-branding-copy)/?$ /projects/telecom-customer-acquisition [R=301,L]
+RewriteRule ^projects/(stoyo-branding|stoyo-branding-copy)/?$ /projects/solar-adoption-campaign [R=301,L]
+RewriteRule ^projects/vero-app-development/?$ /projects/fintech-onboarding-activations [R=301,L]
+RewriteRule ^blog/(why-your-website-s-user-experience-is-its-greatest-asset)/?$ /blog/why-face-to-face-beats-digital-ads [R=301,L]
+RewriteRule ^blog/(why-mobile-first-design-is-crucial-for-modern-websites)/?$ /blog/inside-a-high-converting-brand-activation [R=301,L]
+RewriteRule ^blog/(how-to-create-a-website-that-truly-connects-with-your-audience)/?$ /blog/scale-customer-acquisition-without-losing-your-brand [R=301,L]
+RewriteRule ^blog/(top-web-design-trends-to-watch-in-2024)/?$ /blog/how-live-consumer-feedback-sharpens-strategy [R=301,L]
+RewriteRule ^blog/(building-trust-online-the-importance-of-testimonials)/?$ /blog/why-brand-ambassadors-drive-customer-retention [R=301,L]
+RewriteRule ^blog/(boosting-site-speed-key-tips-for-faster-load-times|how-to-balance-aesthetics-and-functionality-in-web-design|the-secret-to-designing-high-converting-landing-pages|the-ultimate-checklist-for-launching-a-successful-website|why-responsive-design-is-more-important-today-than-ever-before)/?$ /blog/ [R=301,L]
+
+# ---- Canonical URLs: no /index.html and no .html ----
+RewriteCond %{THE_REQUEST} \s/(.*)index\.html[\s?] [NC]
+RewriteRule ^(.*)index\.html$ /$1 [R=301,L,NC]
+RewriteCond %{THE_REQUEST} \s/(.+)\.html[\s?] [NC]
+RewriteRule ^(.+)\.html$ /$1 [R=301,L,NC]
+
+# ---- Clean URLs: /about -> about.html ----
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html [L,QSA]
 
-# Fix trailing slashes for subdirectories
+# Trailing slash for directories (/projects -> /projects/)
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^(.+[^/])$ /$1/ [R=301,L]
 
-# MIME Types for Web Fonts and modern formats
+ErrorDocument 404 /404.html
+
+# ---- Security headers ----
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ---- MIME types ----
 <IfModule mod_mime.c>
   AddType font/woff2 .woff2
   AddType font/woff .woff
   AddType font/ttf .ttf
-  AddType font/eot .eot
   AddType image/svg+xml .svg
   AddType image/webp .webp
   AddType application/javascript .js
   AddType text/css .css
+  AddType text/plain .txt
+  AddType application/xml .xml
 </IfModule>
 
-# Browser Caching
+# ---- Browser caching ----
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresDefault "access plus 1 month"
@@ -43,7 +79,7 @@ RewriteRule ^(.+[^/])$ /$1/ [R=301,L]
   ExpiresByType font/woff "access plus 1 year"
 </IfModule>
 
-# Gzip Compression
+# ---- Compression ----
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json font/woff2
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json application/xml image/svg+xml
 </IfModule>

@@ -49,23 +49,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const servicesData = [
     {
       title: 'Experiential Marketing',
-      description: 'We design and produce immersive brand experiences, pop-ups, and experiential environments that forge emotional connections with your audience.',
-      image: './assets/images/T5XSyGg3skqWFq4gynSvi2wGqHU.jpg'
+      description: 'Immersive brand experiences, pop-ups and activations that create emotional connections and make your brand unforgettable.',
+      image: '/assets/images/photos/service-experiential-tab.jpg',
+      href: '/services/experiential-marketing'
     },
     {
       title: 'Customer Acquisition',
-      description: 'Elite face-to-face field teams that engage consumers directly in high-traffic commercial hubs, qualifying and converting with high retention.',
-      image: './assets/images/SVNjJOBLJO0tL5qGNY8CExU1fA.jpg'
+      description: 'Trained, face-to-face field teams that meet customers where they are and turn real conversations into loyal customers.',
+      image: '/assets/images/photos/service-acquisition-tab.jpg',
+      href: '/services/customer-acquisition'
     },
     {
       title: 'Market Intelligence',
-      description: 'Real-time ground data collection and consumer feedback during live activations to refine your broader campaigns with absolute precision.',
-      image: './assets/images/F5zSpVx8lP6Sy03URQXBu2RRUbg.jpg'
+      description: 'Live ground data and direct consumer feedback captured during every activation, to sharpen your strategy in real time.',
+      image: '/assets/images/photos/service-intelligence-tab.jpg',
+      href: '/services/market-intelligence'
     },
     {
       title: 'Territory Expansion',
-      description: 'Turnkey operational deployment into new metropolitan regions, managing talent curation, compliance, logistics, and executive oversight.',
-      image: './assets/images/AlJTmhoexT1QmxuwZ7OiLjeKtUM.jpg'
+      description: 'Turnkey field deployment into new cities, with talent, logistics and quality control handled by one team.',
+      image: '/assets/images/photos/service-territory-tab.jpg',
+      href: '/services/territory-expansion'
     }
   ];
 
@@ -77,6 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailImg = container.querySelector('.servicesListDetailImage');
     const detailTitle = container.querySelector('.servicesListDetailTitle');
     const detailDesc = container.querySelector('.servicesListDetailDescription');
+    const detailText = container.querySelector('.servicesListDetailText');
+    let detailLink = null;
+    if (detailText) {
+      detailLink = document.createElement('a');
+      detailLink.className = 'servicesListDetailLink';
+      detailLink.textContent = 'Learn more';
+      detailLink.setAttribute('aria-label', 'Learn more about this service');
+      detailText.appendChild(detailLink);
+      const initial = (detailTitle && servicesData.find(d => d.title === detailTitle.textContent.trim())) || servicesData[0];
+      detailLink.href = initial.href;
+    }
 
     rows.forEach((row, index) => {
       row.addEventListener('click', (e) => {
@@ -107,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (detailImg) detailImg.src = data.image;
             if (detailTitle) detailTitle.textContent = data.title;
             if (detailDesc) detailDesc.textContent = data.description;
+            if (detailLink) detailLink.href = data.href;
             detailSwap.style.opacity = '1';
             detailSwap.style.transform = 'translateY(0)';
           }, 150);
@@ -124,16 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRetainer = false;
 
     const deliverables = {
-      project: {
-        basic: 'Custom Scope',
-        pro: 'Tailored SLA',
-        max: 'Dedicated Fleet'
-      },
-      retainer: {
-        basic: 'Bespoke Scope',
-        pro: 'Executive SLA',
-        max: 'Sovereign Fleet'
+      project: { basic: 'Pilot Scope', pro: 'Growth Scope', max: 'Scale Scope' },
+      retainer: { basic: 'Monthly Pilot', pro: 'Monthly Growth', max: 'Monthly Scale' }
+    };
+    const planKeyOf = (text) => {
+      for (const mode of ['project', 'retainer']) {
+        for (const key of ['basic', 'pro', 'max']) {
+          if (deliverables[mode][key] === text) return key;
+        }
       }
+      return null;
     };
 
     const updatePricingDisplay = () => {
@@ -162,16 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update card deliverables (NO dollar prices!)
       const cardTexts = pricingSection.querySelectorAll('p.framer-text');
       cardTexts.forEach(p => {
-        const text = p.textContent.trim();
-        if (text.includes('$') || text.includes('Custom') || text.includes('Bespoke') || text.includes('Tailored') || text.includes('Dedicated') || text.includes('SLA') || text.includes('Fleet')) {
-          if (text.includes('999') || text.includes('699') || text.includes('Custom Scope') || text.includes('Bespoke Scope')) {
-            p.textContent = deliverables[mode].basic;
-          } else if (text.includes('2,999') || text.includes('2,499') || text.includes('2,099') || text.includes('Tailored SLA') || text.includes('Executive SLA')) {
-            p.textContent = deliverables[mode].pro;
-          } else if (text.includes('4,999') || text.includes('3,499') || text.includes('Dedicated Fleet') || text.includes('Sovereign Fleet')) {
-            p.textContent = deliverables[mode].max;
-          }
-        }
+        const key = planKeyOf(p.textContent.trim());
+        if (key) p.textContent = deliverables[mode][key];
       });
     };
 
@@ -265,6 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
   menuButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      // nested menu elements both listen: handle each click once
+      if (e.__msMenuHandled) return;
+      e.__msMenuHandled = true;
       const header = btn.closest('header');
       if (!header) return;
 
@@ -296,26 +307,50 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const forms = document.querySelectorAll('form[data-framer-form]');
   forms.forEach(form => {
+    // status line shown under the form (no browser alerts)
+    const status = document.createElement('p');
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.style.cssText = 'margin:14px 0 0;font:500 14px/1.5 Inter,sans-serif;color:#d4af37;display:none';
+    form.appendChild(status);
+    const say = (msg, ok) => {
+      status.textContent = msg;
+      status.style.display = 'block';
+      status.style.color = ok ? '#d4af37' : '#ff8a80';
+    };
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const submitBtn = form.querySelector('button[type="submit"]') || form.querySelector('input[type="submit"]');
-      const origText = submitBtn ? submitBtn.innerText : '';
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Sending...';
-      }
+      const label = submitBtn ? submitBtn.querySelector('p') : null;
+      const origText = label ? label.textContent : '';
+      const setLabel = (txt) => { if (label) label.textContent = txt; };
+      if (submitBtn) submitBtn.disabled = true;
+      setLabel('Sending...');
 
-      setTimeout(() => {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerText = 'Sent Successfully!';
-        }
-        alert('Thank you! Your inquiry has been received by Main Street. Our executive team in Culver City will contact you within 24 hours.');
-        form.reset();
-        setTimeout(() => {
-          if (submitBtn) submitBtn.innerText = origText || 'Submit';
-        }, 3000);
-      }, 600);
+      const data = new FormData(form);
+      data.append('page', location.pathname);
+
+      fetch('/api/contact.php', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+        .then(r => r.json().then(j => ({ ok: r.ok && j.ok, j })))
+        .then(res => {
+          if (res.ok) {
+            form.reset();
+            setLabel('Sent');
+            say('Thank you! Your message has been received. The Main Street team will get back to you shortly.', true);
+          } else {
+            setLabel(origText || 'Submit');
+            say((res.j && res.j.error) || 'Something went wrong. Please check your details and try again.', false);
+          }
+        })
+        .catch(() => {
+          setLabel(origText || 'Submit');
+          say('We could not send your message right now. Please try again in a moment or email us directly.', false);
+        })
+        .finally(() => {
+          if (submitBtn) submitBtn.disabled = false;
+          setTimeout(() => setLabel(origText || 'Submit'), 4000);
+        });
     });
   });
 
@@ -456,7 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------
     // E. PROJECT CARDS STAGGERED 2-COLUMN PARALLAX
     // ------------------------------------------
-    const projectCards = document.querySelectorAll('.framer-lux5qc, [data-framer-name*="Project"]');
+    const projectCards = document.querySelectorAll('.ms-project-parallax');
     projectCards.forEach((card, i) => {
       const speed = (i % 2 === 0) ? -40 : -90;
       gsap.to(card, {
@@ -472,35 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ------------------------------------------
-    // D. NUMBERS ANIMATED COUNTERS
-    // ------------------------------------------
-    const numbersSection = document.querySelector('[data-framer-name="Numbers"]');
-    if (numbersSection) {
-      const stats = [
-        { labels: ['Retention Increase', 'Websites launched', 'Retention'], target: 45, decimals: 0 },
-        { labels: ['Consumers Engaged', 'Users reached', 'Consumers'], target: 2.5, decimals: 1 },
-        { labels: ['Client Retention Rate', 'Client satisfaction rate', 'Satisfaction'], target: 98, decimals: 0 },
-        { labels: ['Expansion Markets', 'Years of expertise', 'Markets'], target: 12, decimals: 0 }
-      ];
-
-      // Set initial numbers immediately so they never display 0
-      stats.forEach(stat => {
-        const labels = Array.from(numbersSection.querySelectorAll('*')).filter(el => 
-          el.children.length === 0 && el.innerText && stat.labels.some(l => el.innerText.trim().includes(l))
-        );
-        labels.forEach(label => {
-          const itemRoot = label.closest('.framer-11g5wz4')?.parentElement || label.parentElement?.parentElement?.parentElement?.parentElement;
-          if (itemRoot) {
-            const numSpans = Array.from(itemRoot.querySelectorAll('span')).filter(s => /^\d+(\.\d+)?$/.test(s.innerText.trim()));
-            numSpans.forEach(span => {
-              span.innerText = stat.decimals === 1 ? stat.target.toFixed(1) : Math.round(stat.target).toString();
-            });
-          }
-        });
-      });
-    }
-
-    // ------------------------------------------
     // E. REFRESH SCROLLTRIGGER AFTER INITIAL LOAD
     // ------------------------------------------
     setTimeout(() => {
@@ -510,3 +516,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+/* ---------- Work / Services category filter ---------- */
+(function () {
+  function init() {
+    var bar = document.querySelector('.framer-1utq7j3[data-border]');
+    var cards = [].slice.call(document.querySelectorAll('a.framer-dmnnwu[data-tags]'));
+    if (!bar || !cards.length) return;
+    var chips = [].slice.call(bar.querySelectorAll('.framer-FxY2X'));
+    function label(c) { return (c.textContent || '').replace(/\s+/g, ' ').trim(); }
+    function apply(l) {
+      chips.forEach(function (c) {
+        var p = c.querySelector('p');
+        if (p) p.style.color = label(c) === l ? 'rgb(12, 12, 12)' : 'rgba(0, 0, 0, 0.4)';
+        c.setAttribute('aria-pressed', label(c) === l ? 'true' : 'false');
+      });
+      cards.forEach(function (card) {
+        var tags = (card.getAttribute('data-tags') || '').split('|');
+        card.style.display = (l === 'All' || tags.indexOf(l) > -1) ? '' : 'none';
+      });
+      if (window.ScrollTrigger && window.ScrollTrigger.refresh) window.ScrollTrigger.refresh();
+    }
+    chips.forEach(function (c) {
+      c.style.cursor = 'pointer';
+      c.setAttribute('role', 'button');
+      c.addEventListener('click', function (e) { e.preventDefault(); apply(label(c)); });
+      c.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); apply(label(c)); }
+      });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();

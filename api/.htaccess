@@ -1,0 +1,8 @@
+# Keep stored submissions and config private
+<FilesMatch "\.(jsonl|log)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^config\.php$">
+  Require all denied
+</FilesMatch>
+Options -Indexes

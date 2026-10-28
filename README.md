@@ -1,39 +1,26 @@
-# MAIN STREET — Building The Future
+# MAIN STREET — Experiential Marketing Agency (Los Angeles)
 
-Official institutional website for **Main Street** — Experiential Marketing, Brand Activations, Direct Customer Acquisition & Ground Intelligence (Culver City, CA).
+Static site (HTML/CSS/JS) for https://mainstreet.landingprofile.com — Apache/LiteSpeed (Hostinger) with clean URLs via `.htaccess`.
 
-## 🚀 Features
-
-- **Bespoke Black, White & Gold Identity**: Custom 3D metallic logo lockups, color-graded photography, and luxury typography.
-- **Zero External Dependencies**: 100% self-contained static HTML/CSS/JS with all images, vector graphics, and `.woff2` fonts served locally from `/assets`.
-- **Interactive Engine**: Vanilla JavaScript + GSAP ScrollTrigger + Lenis smooth scrolling powering capability tabs, consultative engagement architectures, animated counters, and FAQ accordions.
-- **Production Ready**: Configured with `.htaccess` for Apache/LiteSpeed web servers on Hostinger.
-
-## 📁 Project Structure
+## Structure
 
 ```
-├── .htaccess                  # Apache / LiteSpeed rewrite and caching rules
-├── assets/
-│   ├── fonts/                 # Localized web fonts (.woff2)
-│   ├── images/                # 3D logos & Black/White/Gold graded media
-│   └── js/                    # Lenis, GSAP & native interactions engine
-├── index.html                 # Homepage
-├── about.html                 # About page
-├── projects.html              # Proven Impact / Campaigns catalog
-├── projects/                  # Campaign case studies
-├── blog.html                  # Field Intelligence catalog
-├── blog/                      # Executive briefings & articles
-├── contact.html               # Executive inquiry page
-├── terms.html                 # Terms of service
-├── privacy.html               # Privacy policy
-├── transform_mainstreet.py    # Automated build & copy transformation script
-└── server.js                  # Local development server
+index.html  about.html  contact.html  privacy.html  terms.html  404.html
+projects/   index.html + 5 case studies   (nav label: "Work")
+services/   index.html + 5 service pages
+blog/       index.html + 6 articles
+api/        contact.php (form handler), config.php (set CONTACT_TO), data/ (blocked from web)
+assets/     fonts, images, js (Lenis, GSAP, interactions.js)
+sitemap.xml  robots.txt  llms.txt
 ```
 
-## 🛠 Local Development
+## Before going live — placeholders to replace
 
-Start local preview server:
-```bash
-node server.js
-```
-Open `http://localhost:3005` in your browser.
+- Phone `(000) 000-0000` / `tel:+10000000000`, e-mail `info@xxxxxxxx.com`, street address, hours.
+- `api/config.php` → `CONTACT_TO` (inbox that receives form leads). Submissions are always also stored in `api/data/submissions.jsonl`.
+- Social links point to generic roots (x.com, linkedin.com, instagram.com, facebook.com) until real profiles exist.
+- Numbers shown as `00+`, `0.0M+`, `+00%` are placeholders; replace with real, verifiable metrics.
+- Testimonials are role-only (no invented names). Replace with real client quotes when available.
+- Team cards use "Name Surname"; portraits and avatars are AI-generated placeholders.
+- Case-study dates / durations / results and the "typical launch / reporting" values on service pages are illustrative.
+- Privacy Policy and Terms of Service are generic drafts — have them reviewed by counsel.

@@ -1,5 +1,10 @@
+api/data/*.jsonl
+api/data/rl_*
 .DS_Store
 Thumbs.db
 node_modules/
 *.log
 __pycache__/
+_incoming/
+_deploy_tmp/
+_old_template_build/
