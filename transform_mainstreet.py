@@ -3,7 +3,7 @@ import re
 import json
 
 src_dir = '/tmp/lyniq_pages'
-out_dir = '/Users/gabrielalvespardin/.gemini/antigravity/scratch/lyniq'
+out_dir = os.path.dirname(os.path.abspath(__file__))
 img_map = json.load(open(os.path.join(out_dir, 'image_map.json')))
 font_map = json.load(open(os.path.join(out_dir, 'font_map.json')))
 

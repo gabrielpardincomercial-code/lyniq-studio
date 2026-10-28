@@ -1,33 +1,33 @@
-# Lyniq Studio — Clean Clone & Production Deployment
+# MAIN STREET — Building The Future
 
-Modern, high-performance static clone of [Lyniq Studio](https://lyniq.framer.website/).
+Official institutional website for **Main Street** — Experiential Marketing, Brand Activations, Direct Customer Acquisition & Ground Intelligence (Culver City, CA).
 
 ## 🚀 Features
 
-- **Decoupled Runtime**: 100% decoupled from Framer cloud dependencies, tracking scripts, and hydration traps.
-- **Localized Assets**: All 65 images and 89 typography font files served locally from `/assets`.
-- **Smooth Interactions**: Native vanilla JavaScript engine powering interactive service tabs, pricing switches, FAQ accordions, burger menus, and forms.
-- **Lenis Smooth Scrolling**: Inertial smooth scrolling integrated via Lenis.
-- **Production Ready**: Clean `.htaccess` configured for Apache/LiteSpeed web servers with caching, compression, and clean URLs.
+- **Bespoke Black, White & Gold Identity**: Custom 3D metallic logo lockups, color-graded photography, and luxury typography.
+- **Zero External Dependencies**: 100% self-contained static HTML/CSS/JS with all images, vector graphics, and `.woff2` fonts served locally from `/assets`.
+- **Interactive Engine**: Vanilla JavaScript + GSAP ScrollTrigger + Lenis smooth scrolling powering capability tabs, consultative engagement architectures, animated counters, and FAQ accordions.
+- **Production Ready**: Configured with `.htaccess` for Apache/LiteSpeed web servers on Hostinger.
 
 ## 📁 Project Structure
 
 ```
-├── .htaccess             # Apache / LiteSpeed rewrite and caching rules
+├── .htaccess                  # Apache / LiteSpeed rewrite and caching rules
 ├── assets/
-│   ├── fonts/            # Localized web fonts (.woff2)
-│   ├── images/           # Localized images and media
-│   └── js/               # Lenis & native interactions engine
-├── index.html            # Homepage
-├── about.html            # About page
-├── projects.html         # Projects catalog
-├── projects/             # Case studies
-├── blog.html             # Blog catalog
-├── blog/                 # Blog articles
-├── contact.html          # Contact page
-├── terms.html            # Terms of service
-├── privacy.html          # Privacy policy
-└── server.js             # Local development server
+│   ├── fonts/                 # Localized web fonts (.woff2)
+│   ├── images/                # 3D logos & Black/White/Gold graded media
+│   └── js/                    # Lenis, GSAP & native interactions engine
+├── index.html                 # Homepage
+├── about.html                 # About page
+├── projects.html              # Proven Impact / Campaigns catalog
+├── projects/                  # Campaign case studies
+├── blog.html                  # Field Intelligence catalog
+├── blog/                      # Executive briefings & articles
+├── contact.html               # Executive inquiry page
+├── terms.html                 # Terms of service
+├── privacy.html               # Privacy policy
+├── transform_mainstreet.py    # Automated build & copy transformation script
+└── server.js                  # Local development server
 ```
 
 ## 🛠 Local Development
