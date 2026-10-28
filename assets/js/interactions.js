@@ -44,27 +44,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 1. SERVICES INTERACTIVE TABS
+  // 1. SERVICES INTERACTIVE TABS (MAIN STREET)
   // ==========================================
   const servicesData = [
     {
-      title: 'Branding',
-      description: 'We create impactful brand identities that differentiate your business and connect with your audience.',
+      title: 'Experiential Marketing',
+      description: 'We design and produce immersive brand experiences, pop-ups, and experiential environments that forge emotional connections with your audience.',
       image: './assets/images/T5XSyGg3skqWFq4gynSvi2wGqHU.jpg'
     },
     {
-      title: 'Development',
-      description: 'From front-end interactions to back-end functionality, we deliver robust solutions that grow with your business.',
+      title: 'Customer Acquisition',
+      description: 'Elite face-to-face field teams that engage consumers directly in high-traffic commercial hubs, qualifying and converting with high retention.',
       image: './assets/images/SVNjJOBLJO0tL5qGNY8CExU1fA.jpg'
     },
     {
-      title: 'Websites',
-      description: 'We build custom websites that go beyond aesthetics, balancing design and functionality to captivate your audience and drive engagement.',
+      title: 'Market Intelligence',
+      description: 'Real-time ground data collection and consumer feedback during live activations to refine your broader campaigns with absolute precision.',
       image: './assets/images/F5zSpVx8lP6Sy03URQXBu2RRUbg.jpg'
     },
     {
-      title: 'Design support',
-      description: 'We’re here to help with everything from small updates to full-scale redesigns, tailored to your evolving needs.',
+      title: 'Territory Expansion',
+      description: 'Turnkey operational deployment into new metropolitan regions, managing talent curation, compliance, logistics, and executive oversight.',
       image: './assets/images/AlJTmhoexT1QmxuwZ7OiLjeKtUM.jpg'
     }
   ];
@@ -116,33 +116,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // 2. PRICING MONTHLY / ANNUAL TOGGLE
+  // 2. ENGAGEMENT MODELS & CONSULTATIVE PLANS (NO PRICES)
   // ==========================================
   const pricingSection = document.querySelector('[data-framer-name="Pricing"]');
   if (pricingSection) {
     const togglePeriods = pricingSection.querySelectorAll('[data-framer-name="Period"]');
-    let isAnnual = false;
+    let isRetainer = false;
 
-    const prices = {
-      monthly: {
-        basic: '$999',
-        pro: '$2,999',
-        max: '$4,999'
+    const deliverables = {
+      project: {
+        basic: 'Custom Scope',
+        pro: 'Tailored SLA',
+        max: 'Dedicated Fleet'
       },
-      annual: {
-        basic: '$699',
-        pro: '$2,099',
-        max: '$3,499'
+      retainer: {
+        basic: 'Bespoke Scope',
+        pro: 'Executive SLA',
+        max: 'Sovereign Fleet'
       }
     };
 
     const updatePricingDisplay = () => {
-      const mode = isAnnual ? 'annual' : 'monthly';
+      const mode = isRetainer ? 'retainer' : 'project';
       
       // Update toggle indicator
       pricingSection.querySelectorAll('[data-framer-name="Left"]').forEach(sw => {
         const ellipse = sw.querySelector('[data-framer-name="Ellipse"]');
-        if (isAnnual) {
+        if (isRetainer) {
           sw.style.justifyContent = 'flex-end';
           if (ellipse) ellipse.style.transform = 'translateX(24px)';
         } else {
@@ -153,22 +153,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Update text opacities on toggle labels
       pricingSection.querySelectorAll('[data-framer-name="Monthly"]').forEach(el => {
-        el.style.opacity = isAnnual ? '0.5' : '1';
+        el.style.opacity = isRetainer ? '0.5' : '1';
       });
       pricingSection.querySelectorAll('[data-framer-name="Annual"]').forEach(el => {
-        el.style.opacity = isAnnual ? '1' : '0.5';
+        el.style.opacity = isRetainer ? '1' : '0.5';
       });
 
-      // Update card prices
+      // Update card deliverables (NO dollar prices!)
       const cardTexts = pricingSection.querySelectorAll('p.framer-text');
       cardTexts.forEach(p => {
         const text = p.textContent.trim();
-        if (text === '$999' || text === '$699') {
-          p.textContent = prices[mode].basic;
-        } else if (text === '$2,999' || text === '$2,099') {
-          p.textContent = prices[mode].pro;
-        } else if (text === '$4,999' || text === '$3,499') {
-          p.textContent = prices[mode].max;
+        if (text.includes('$') || text.includes('Custom') || text.includes('Bespoke') || text.includes('Tailored') || text.includes('Dedicated') || text.includes('SLA') || text.includes('Fleet')) {
+          if (text.includes('999') || text.includes('699') || text.includes('Custom Scope') || text.includes('Bespoke Scope')) {
+            p.textContent = deliverables[mode].basic;
+          } else if (text.includes('2,999') || text.includes('2,499') || text.includes('2,099') || text.includes('Tailored SLA') || text.includes('Executive SLA')) {
+            p.textContent = deliverables[mode].pro;
+          } else if (text.includes('4,999') || text.includes('3,499') || text.includes('Dedicated Fleet') || text.includes('Sovereign Fleet')) {
+            p.textContent = deliverables[mode].max;
+          }
         }
       });
     };
@@ -176,8 +178,23 @@ document.addEventListener('DOMContentLoaded', () => {
     togglePeriods.forEach(period => {
       period.style.cursor = 'pointer';
       period.addEventListener('click', () => {
-        isAnnual = !isAnnual;
+        isRetainer = !isRetainer;
         updatePricingDisplay();
+      });
+    });
+
+    // Make all pricing buttons smoothly scroll to contact form
+    pricingSection.querySelectorAll('button, a[data-framer-name*="Start"], a[data-framer-name*="Button"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const contactSec = document.querySelector('[data-framer-name="Contact"]') || document.querySelector('#contact') || document.querySelector('footer');
+        if (contactSec) {
+          if (window.lenisInstance) {
+            window.lenisInstance.scrollTo(contactSec, { offset: -50, duration: 1.2 });
+          } else {
+            contactSec.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
       });
     });
   }
@@ -467,15 +484,15 @@ document.addEventListener('DOMContentLoaded', () => {
         once: true,
         onEnter: () => {
           const stats = [
-            { label: 'Websites launched', target: 17, decimals: 0 },
-            { label: 'Users reached', target: 1.5, decimals: 1 },
-            { label: 'Client satisfaction rate', target: 98, decimals: 0 },
-            { label: 'Years of expertise', target: 10, decimals: 0 }
+            { labels: ['Retention Increase', 'Websites launched', 'Retention'], target: 45, decimals: 0 },
+            { labels: ['Consumers Engaged', 'Users reached', 'Consumers'], target: 2.5, decimals: 1 },
+            { labels: ['Client Retention Rate', 'Client satisfaction rate', 'Satisfaction'], target: 98, decimals: 0 },
+            { labels: ['Expansion Markets', 'Years of expertise', 'Markets'], target: 12, decimals: 0 }
           ];
 
           stats.forEach(stat => {
             const labels = Array.from(numbersSection.querySelectorAll('*')).filter(el => 
-              el.children.length === 0 && el.innerText && el.innerText.trim() === stat.label
+              el.children.length === 0 && el.innerText && stat.labels.some(l => el.innerText.trim().includes(l))
             );
             labels.forEach(label => {
               const itemRoot = label.closest('.framer-11g5wz4')?.parentElement || label.parentElement?.parentElement?.parentElement?.parentElement;
