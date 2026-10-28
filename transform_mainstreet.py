@@ -439,7 +439,7 @@ def transform_html(html, dest_rel):
     html = re.sub(r'<title>.*?</title>', '<title>Main Street | Experiential Marketing & Direct Customer Acquisition</title>', html, flags=re.I)
     html = re.sub(r'content="Transform your brand with Lyniq.*?"', 'content="Main Street transforms audience attention into measurable enterprise growth through high-impact experiential marketing, disciplined field representation, and direct customer acquisition."', html, flags=re.I)
     html = re.sub(r'content="Lyniq Studio[^"]*"', 'content="Main Street | Building The Future"', html, flags=re.I)
-    html = re.sub(r'https://lyniq\.framer\.website/?', 'https://lyniq.landingprofile.com/', html, flags=re.I)
+    html = re.sub(r'https://lyniq\.framer\.website/?', 'https://mainstreet.landingprofile.com/', html, flags=re.I)
     html = html.replace('mailto:hello@lyniqstudio.com', 'mailto:info@empirecollectiveagency.com')
     html = html.replace('hello@lyniqstudio.com', 'info@empirecollectiveagency.com')
     html = html.replace('(510) 895-6500', '(310) 982-6410')
