@@ -549,3 +549,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+
+/* Match restored SVG icons to the colour of the text they sit next to */
+(function () {
+  function sync() {
+    document.querySelectorAll('svg.ms-ic').forEach(function (svg) {
+      var host = svg.closest('[class$="-container"]');
+      if (!host || !host.parentElement) return;
+      var txt = host.parentElement.querySelector('p');
+      if (txt) svg.style.color = getComputedStyle(txt).color;
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(sync, 200); });
+  else setTimeout(sync, 200);
+  window.addEventListener('load', function () { setTimeout(sync, 600); });
+})();
